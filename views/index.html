@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Internet Graffiti</title>
+    <link rel="stylesheet" type="textcss" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+
+            <div class="jumbotron">
+                <h1 class="display-4">Internet Graffiti!</h1>
+                <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+                <hr class="my-4">
+                <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+                
+            </div>
+
+
+        <ul id="messages"></ul>
+        <form action="">
+        <input id="m" autocomplete="off" /><button>Send</button>
+        </form>
+    </div>
+
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js" integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o" crossorigin="anonymous"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+    // user input for message
+    $(function () {
+        var socket = io();
+        // send to web socket
+        $('form').submit(function(e){
+            
+            e.preventDefault(); // prevents page reloading
+        
+            socket.emit('chat message', $('#m').val());
+        
+            $('#m').val('');
+            return false;
+        });
+
+        // retrieve from websocket
+        socket.on('chat message', function(msg){
+            $('#messages').append($('<li class="message">').text(msg));
+        });
+    });
+    </script>
+
+    <script>
+    $(document).ready(function() {
+        setTimeout(updateClasses, 5000)
+
+        function updateClasses(){
+            $('.new').toggleClass('new', 'archived')
+        }
+    })
+    </script>
+  </body>
+</html>
